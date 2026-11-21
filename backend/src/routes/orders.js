@@ -6,10 +6,15 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 const prisma = new PrismaClient();
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+
+function getRazorpay() {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  if (!keyId || !keySecret || keyId.includes("replace") || keySecret.includes("replace")) {
+    throw new Error("RAZORPAY_NOT_CONFIGURED");
+  }
+  return new Razorpay({ key_id: keyId, key_secret: keySecret });
+}
 
 router.post("/create", auth, async (req, res) => {
   try {
@@ -33,7 +38,7 @@ router.post("/create", auth, async (req, res) => {
       orderItemsData.push({ productId: product.id, quantity, price: product.price });
     }
 
-    const rzpOrder = await razorpay.orders.create({
+    const rzpOrder = await getRazorpay().orders.create({
       amount: Math.round(totalAmount * 100),
       currency: "INR",
       receipt: `rcpt_${Date.now()}`,
@@ -50,6 +55,9 @@ router.post("/create", auth, async (req, res) => {
 
     res.status(201).json({ order, razorpayOrder: rzpOrder, keyId: process.env.RAZORPAY_KEY_ID });
   } catch (error) {
+    if (error.message === "RAZORPAY_NOT_CONFIGURED") {
+      return res.status(503).json({ error: "Payment gateway is not configured" });
+    }
     console.error(error);
     res.status(500).json({ error: "Unable to create order" });
   }

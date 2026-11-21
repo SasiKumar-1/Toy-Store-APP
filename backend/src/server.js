@@ -26,8 +26,11 @@ app.use((err, req, res, next) => {
 });
 
 if (!process.env.JWT_SECRET) {
-  console.error("JWT_SECRET is required");
-  process.exit(1);
+  if (process.env.NODE_ENV === "production") {
+    console.error("JWT_SECRET is required");
+    process.exit(1);
+  }
+  process.env.JWT_SECRET = "local-development-secret-change-before-production";
 }
 
 const PORT = process.env.PORT || 5000;
