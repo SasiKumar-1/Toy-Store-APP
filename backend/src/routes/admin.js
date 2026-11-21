@@ -107,6 +107,8 @@ router.delete("/products/:id", adminAuth, async (req, res) => {
 router.patch("/orders/:id/status", adminAuth, async (req, res) => {
   try {
     const { status } = req.body; // PAID, SHIPPED, DELIVERED, CANCELLED
+    const allowed = ["PAID", "SHIPPED", "DELIVERED", "CANCELLED"];
+    if (!allowed.includes(status)) return res.status(400).json({ error: "Invalid order status" });
     const order = await prisma.order.update({
       where: { id: req.params.id },
       data: { status },

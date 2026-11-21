@@ -1,8 +1,17 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const bcrypt = require('bcryptjs');
 
 async function main() {
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@toystore.local';
+  const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'ChangeMe123!', 10);
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: { name: 'Toy Store Admin', email: adminEmail, password: adminPassword, role: 'ADMIN' }
+  });
   await prisma.product.createMany({
+    skipDuplicates: true,
     data: [
       {
         title: 'LEGO Technic Off-Road Race Buggy',

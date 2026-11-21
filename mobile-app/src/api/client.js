@@ -1,8 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Replace with your machine's local LAN IP when testing on a physical phone
-const API_URL = "http://10.0.2.2:5000/api";
+// Set EXPO_PUBLIC_API_URL for deployed builds, or use the emulator default for local Android.
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://10.0.2.2:5000/api";
 
 const api = axios.create({ baseURL: API_URL });
 
