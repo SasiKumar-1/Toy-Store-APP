@@ -1,0 +1,49 @@
+toy-store-app/
+├── backend/
+│   ├── prisma/
+│   │   ├── migrations/              # Auto-generated SQL migration history
+│   │   ├── schema.prisma            # Models: User (CUSTOMER/ADMIN), Product, Order, OrderItem, OrderEvent
+│   │   └── seed.js                  # Initial Indian toy catalog & sample admin user
+│   ├── src/
+│   │   ├── middleware/
+│   │   │   ├── auth.js              # Customer JWT verification
+│   │   │   └── adminAuth.js         # Admin role verification
+│   │   ├── routes/
+│   │   │   ├── auth.js              # Register & Login endpoints
+│   │   │   ├── products.js          # Toy search, category & age-group filters
+│   │   │   ├── orders.js            # Order creation, Razorpay verification & history
+│   │   │   ├── admin.js             # Toy upload, inventory stock updates, stats & process feed
+│   │   │   └── webhooks.js          # Razorpay payment.captured / payment.failed listeners
+│   │   └── server.js                # Express app entry point (raw body for webhooks + JSON routes)
+│   ├── .env                         # DATABASE_URL, JWT_SECRET, RAZORPAY_KEY_ID, RAZORPAY_WEBHOOK_SECRET
+│   └── package.json
+│
+├── mobile-app/                      # Customer Storefront (React Native + Expo)
+│   ├── src/
+│   │   ├── api/
+│   │   │   └── client.js            # Axios instance with AsyncStorage JWT interceptor
+│   │   ├── context/
+│   │   │   └── CartContext.js       # Global cart state & INR total calculation
+│   │   ├── components/
+│   │   │   └── ToyCard.js           # Product card with age badge, rating & discount %
+│   │   └── screens/
+│   │       ├── HomeScreen.js        # Search bar, category/age chips & 2-column toy grid
+│   │       ├── ProductDetailScreen.js
+│   │       ├── CartScreen.js        # Address input, quantity controls & Razorpay checkout
+│   │       └── OrdersScreen.js      # Live customer order status tracker
+│   ├── App.js                       # Bottom tabs & stack navigation
+│   └── package.json
+│
+└── admin-dashboard/                 # Seller & Operations Panel (React + Vite)
+    ├── src/
+    │   ├── api/
+    │   │   └── adminClient.js       # Axios instance with adminToken interceptor
+    │   ├── components/
+    │   │   ├── KpiCards.jsx         # Revenue, total orders & low-stock alert counters
+    │   │   ├── ProcessFeed.jsx      # Live OrderEvent audit timeline
+    │   │   ├── InventoryTable.jsx   # Stock control & quick +10 / -1 restock buttons
+    │   │   └── UploadToyForm.jsx    # New toy creation form with age-group & MRP/price fields
+    │   ├── App.jsx                  # Dashboard layout & tab switcher
+    │   └── main.jsx                 # React DOM mount
+    ├── index.html
+    └── package.json

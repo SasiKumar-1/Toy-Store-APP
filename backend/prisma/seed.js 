@@ -1,0 +1,60 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+async function main() {
+  await prisma.product.createMany({
+    data: [
+      {
+        title: 'LEGO Technic Off-Road Race Buggy',
+        description: '374-piece STEM building kit with working steering and suspension.',
+        brand: 'LEGO',
+        category: 'STEM',
+        ageGroup: '8+ yrs',
+        price: 3999,
+        mrp: 4999,
+        stock: 25,
+        rating: 4.8,
+        imageUrl: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=600'
+      },
+      {
+        title: 'Hot Wheels 20-Car Gift Pack',
+        description: 'Assorted 1:64 scale die-cast metal toy cars for collectors and kids.',
+        brand: 'Mattel',
+        category: 'Vehicles',
+        ageGroup: '3-5 yrs',
+        price: 2499,
+        mrp: 3199,
+        stock: 40,
+        rating: 4.6,
+        imageUrl: 'https://images.unsplash.com/photo-1594787318286-3d835c1d207f?w=600'
+      },
+      {
+        title: 'Plush Giant Panda Soft Toy (45 cm)',
+        description: 'Ultra-soft, washable hypoallergenic fabric teddy for toddlers.',
+        brand: 'Dimpy Stuff',
+        category: 'Soft Toys',
+        ageGroup: '0-2 yrs',
+        price: 799,
+        mrp: 1299,
+        stock: 60,
+        rating: 4.4,
+        imageUrl: 'https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=600'
+      },
+      {
+        title: 'Monopoly Classic India Edition Board Game',
+        description: 'Property trading family board game with Indian cities.',
+        brand: 'Hasbro',
+        category: 'Board Games',
+        ageGroup: '8+ yrs',
+        price: 949,
+        mrp: 1199,
+        stock: 30,
+        rating: 4.7,
+        imageUrl: 'https://images.unsplash.com/photo-1611371805429-8b5c1b2c34ba?w=600'
+      }
+    ]
+  });
+  console.log('Seeded toy catalog successfully.');
+}
+
+main().finally(() => prisma.$disconnect());
